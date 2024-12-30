@@ -19,7 +19,7 @@ export function useMap(containerRef: React.RefObject<HTMLDivElement>) {
         getCurrentPosition({ enableHighAccuracy: true }),
       ]);
       const map = new Map(containerRef.current!, {
-        mapId: "e40ac953b6cf68e2", //theme
+        mapId: process.env.NEXT_PUBLIC_MAP_ID, //theme
         zoom: 15,
         center: position,
       });

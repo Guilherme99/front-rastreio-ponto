@@ -34,5 +34,5 @@ export function MapNewRoute(props: MapNewRouteProps) {
     });
   }, [map, directionsData]);
 
-  return <div className="flex-1 w-2/3 h-full" ref={mapContainerRef} />;
+  return <div className="flex-1 w-100 h-full" ref={mapContainerRef} />;
 }
