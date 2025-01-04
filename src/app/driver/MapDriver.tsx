@@ -27,9 +27,10 @@ export function MapDriver(props: MapDriverProps) {
 
     if (socket.disconnected) {
       socket.connect();
-    } else {
-      socket.offAny();
     }
+    //  else {
+    //   socket.offAny();
+    // }
 
     socket.on("connect", () => {
       console.log("conectado");
@@ -62,9 +63,9 @@ export function MapDriver(props: MapDriverProps) {
       }
     );
 
-    return () => {
-      socket.disconnect();
-    };
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, [route_id, map, start_location, end_location]);
 
   return <div className="flex-1 w-100 h-full" ref={mapContainerRef} />;

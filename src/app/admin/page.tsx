@@ -1,26 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 "use client";
 
 import { useEffect, useRef } from "react";
 import { useMap } from "../../hooks/useMap";
-import { socket } from "@/utils/socket-io";
+import { socket } from "../../utils/socket-io";
 
 export function AdminPage() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const map = useMap(mapContainerRef as any);
+  const map = useMap(mapContainerRef);
 
   useEffect(() => {
     if (!map) {
       return;
     }
 
-    // if (socket.disconnected) {
-    //   socket.connect();
-    // }
-    //  else {
-    //   socket.offAny();
-    // }
+    if (socket.disconnected) {
+      socket.connect();
+    }
 
     socket.on(
       `server:new-points:list`,
@@ -43,20 +38,16 @@ export function AdminPage() {
               position: route.directions.routes[0].legs[0].start_location,
             },
           });
-        } else {
-          map.moveCar(data.route_id, { lat: data.lat, lng: data.lng });
         }
+        map.moveCar(data.route_id, { lat: data.lat, lng: data.lng });
       }
     );
-
-    return () => {
-      socket.disconnect();
-    };
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, [map]);
 
   return <div className="flex-1 w-screen h-screen" ref={mapContainerRef} />;
 }
 
 export default AdminPage;
-
-//
