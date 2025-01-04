@@ -1,0 +1,27 @@
+GET http://localhost:3000/places?text=avenida X, maracanau - ce
+
+###
+
+@originId = ChIJIWBbWN2suAcRaRQeGVKZP0g
+
+@destinationId = ChIJcY8vNWVTxwcRDn1P8A-SYys
+
+
+GET http://localhost:3000/directions?originId={{originId}}&destinationId={{destinationId}}
+
+###
+
+POST http://localhost:3000/routes
+Content-Type: application/json
+
+{
+    "name": "Rota A",
+    "source_id": "{{originId}}",
+    "destination_id": "{{destinationId}}"
+}
+
+
+###
+
+GET http://localhost:3000/routes/6759d210c7189a500167e3c4
+Content-Type: application/json
