@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	mongoStr := "mongodb://root:root@localhost:27017/routes?authSource=admin&directConnection=true"
+	mongoStr := "mongodb://root:root@mongo:27017/routes?authSource=admin&directConnection=true"
 	// open new connection with mongodb
 	mongoConnection, err := mongo.Connect(context.Background(), options.Client().ApplyURI(mongoStr))
 	if err != nil {
@@ -23,7 +23,7 @@ func main() {
 	routeService := internal.NewRouteService(mongoConnection, freightService)
 
 	chDriverMoved := make(chan *internal.DriverMovedEvent)
-	kafkaBroker := "localhost:9092"
+	kafkaBroker := "kafka:9092"
 
 	freightWriter := &kafka.Writer{
 		Addr:     kafka.TCP(kafkaBroker),

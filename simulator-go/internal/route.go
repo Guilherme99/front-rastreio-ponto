@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"math"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -53,7 +54,7 @@ func NewRoute(id string, distance int, directions []Directions) *Route {
 func (rs *RouteService) CreateRoute(route Route) (Route, error) {
 
 	freightCost := rs.freightService.Calculate(route.Distance)
-
+	fmt.Println("preço: %w", freightCost)
 	update := bson.M{
 		"$set": bson.M{
 			"distance":      route.Distance,
@@ -71,7 +72,12 @@ func (rs *RouteService) CreateRoute(route Route) (Route, error) {
 		return Route{}, err
 	}
 
-	return route, err
+	newRoute, err := rs.GetRoute(route.ID)
+	if err != nil {
+		return Route{}, err
+	}
+
+	return newRoute, err
 }
 
 func (rs *RouteService) GetRoute(id string) (Route, error) {

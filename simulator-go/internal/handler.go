@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -40,11 +41,15 @@ func NewRouteCreatedEvent(routeID string, distance int, directions []Directions)
 
 func RouteCreatedHandler(event *RouteCreatedEvent, routeService *RouteService) (*FreightCalculatedEvent, error) {
 	route := NewRoute(event.RouteID, event.Distance, event.Directions)
+	fmt.Println(route)
 	routeCreated, err := routeService.CreateRoute(*route)
+	fmt.Println(routeCreated)
 	if err != nil {
 		return nil, err
 	}
 	freightCalculatedEvent := NewFreightCalculatedEvent(routeCreated.ID, routeCreated.FreightPrice)
+	fmt.Println(freightCalculatedEvent)
+
 	return freightCalculatedEvent, nil
 }
 
