@@ -73,7 +73,6 @@ func (eh *EventHub) HandleEvent(msg []byte) error {
 
 func (eh *EventHub) handleRouteCreated(event RouteCreatedEvent) error {
 	freightCalculatedEvent, err := RouteCreatedHandler(&event, eh.routeService)
-	fmt.Println(freightCalculatedEvent.Amount)
 	if err != nil {
 		return err
 	}
@@ -83,8 +82,6 @@ func (eh *EventHub) handleRouteCreated(event RouteCreatedEvent) error {
 	if err != nil {
 		return fmt.Errorf("error marshalling event: %w", err)
 	}
-
-	fmt.Println(value)
 
 	err = eh.freightWriter.WriteMessages(context.Background(), kafka.Message{
 		Key:   []byte(freightCalculatedEvent.RouteID),

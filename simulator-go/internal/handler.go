@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -41,14 +40,11 @@ func NewRouteCreatedEvent(routeID string, distance int, directions []Directions)
 
 func RouteCreatedHandler(event *RouteCreatedEvent, routeService *RouteService) (*FreightCalculatedEvent, error) {
 	route := NewRoute(event.RouteID, event.Distance, event.Directions)
-	fmt.Println(route)
 	routeCreated, err := routeService.CreateRoute(*route)
-	fmt.Println(routeCreated)
 	if err != nil {
 		return nil, err
 	}
 	freightCalculatedEvent := NewFreightCalculatedEvent(routeCreated.ID, routeCreated.FreightPrice)
-	fmt.Println(freightCalculatedEvent)
 
 	return freightCalculatedEvent, nil
 }
@@ -83,14 +79,14 @@ func DeliveryStartedHandler(event *DeliveryStartedEvent, routeService *RouteServ
 		return err
 	}
 
-	driverMovedEvent := NewDriverMovedEvent(route.ID, 0, 0)
-	for _, direction := range route.Directions {
-		driverMovedEvent.RouteID = route.ID
-		driverMovedEvent.Lat = direction.Lat
-		driverMovedEvent.Lng = direction.Lng
-		time.Sleep(time.Second)
-		ch <- driverMovedEvent
-	}
+	go func() {
+		for _, direction := range route.Directions {
+			driverMovedEvent := NewDriverMovedEvent(route.ID, direction.Lat, direction.Lng)
+			ch <- driverMovedEvent
+			time.Sleep(time.Second)
+		}
+
+	}()
 
 	return nil
 }
