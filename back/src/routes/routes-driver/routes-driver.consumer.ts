@@ -13,13 +13,13 @@ export class RoutesDriverConsumer {
     private httpService: HttpService,
   ) {}
 
-  @MessagePattern('simulator')
+  @MessagePattern('simulation')
   async driverMoved(payload: KafkaContext) {
     this.logger.log(
-      `Updating simulator ${payload.topic}`,
+      `Updating simulation ${payload.topic}`,
       payload.messageValue,
     );
-    const { route_id, lat, lng } = JSON.parse(payload.messageValue);
+    const { route_id, lat, lng } = payload.messageValue;
     await this.httpService.axiosRef.post(
       `http://localhost:3000/routes/${route_id}/process-route`,
       {

@@ -5,6 +5,7 @@ import {
 } from '@nestjs/websockets';
 import { RoutesService } from '../routes.service';
 import { Server } from 'socket.io';
+import { Logger } from '@nestjs/common';
 
 @WebSocketGateway({
   cors: {
@@ -14,6 +15,8 @@ import { Server } from 'socket.io';
 export class RoutesDriverGateway {
   @WebSocketServer()
   server: Server;
+
+  private logger = new Logger(RoutesDriverGateway.name);
 
   constructor(private routesService: RoutesService) {}
 
@@ -53,6 +56,10 @@ export class RoutesDriverGateway {
   }
 
   emitNewPoints(payload: { route_id: string; lat: number; lng: number }) {
+    this.logger.log(
+      `Emitting new points for route ${payload.route_id} - ${payload.lat}, ${payload.lng}`,
+    );
+
     this.server.emit(`server:new-points/${payload.route_id}:list`, {
       route_id: payload.route_id,
       lat: payload.lat,

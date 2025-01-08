@@ -36,6 +36,11 @@ export class RoutesController {
     });
   }
 
+  @Post(`:id/start`)
+  async startRoute(@Param('id') id: string) {
+    await this.routesService.startRoute(id);
+  }
+
   @Get()
   findAll() {
     return this.routesService.findAll();

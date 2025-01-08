@@ -4,6 +4,7 @@ import { DirectionsService } from 'src/maps/directions/directions.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRouteDto } from './dto/create-route.dto';
 import { UpdateRouteDto } from './dto/update-route.dto';
+import e from 'express';
 
 @Injectable()
 export class RoutesService {
@@ -77,6 +78,24 @@ export class RoutesService {
       ],
     });
     return route;
+  }
+
+  async startRoute(id: string) {
+    await this.prismaService.route.findUniqueOrThrow({
+      where: { id },
+    });
+
+    await this.kafkaProducer.send({
+      topic: 'route',
+      messages: [
+        {
+          value: JSON.stringify({
+            event: 'DeliveryStarted',
+            route_id: id,
+          }),
+        },
+      ],
+    });
   }
 
   findAll() {
