@@ -1,5 +1,10 @@
-import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import {
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { RoutesService } from '../routes.service';
+import { Server } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
@@ -7,6 +12,9 @@ import { RoutesService } from '../routes.service';
   },
 })
 export class RoutesDriverGateway {
+  @WebSocketServer()
+  server: Server;
+
   constructor(private routesService: RoutesService) {}
 
   @SubscribeMessage('client:new-points')
@@ -42,6 +50,19 @@ export class RoutesDriverGateway {
       });
       await sleep(2000);
     }
+  }
+
+  emitNewPoints(payload: { route_id: string; lat: number; lng: number }) {
+    this.server.emit(`server:new-points/${payload.route_id}:list`, {
+      route_id: payload.route_id,
+      lat: payload.lat,
+      lng: payload.lng,
+    });
+    this.server.emit('server:new-points:list', {
+      route_id: payload.route_id,
+      lat: payload.lat,
+      lng: payload.lng,
+    });
   }
 }
 

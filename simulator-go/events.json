@@ -1,6 +1,6 @@
 {
     "event": "RouteCreated",
-    "id": "route-123",
+    "id": "route-1",
     "distance": 120,
     "directions": [
       {
@@ -21,6 +21,6 @@
   
   {
     "event": "DeliveryStarted",
-    "route_id": "route-9"
+    "route_id": "route-1"
   }
   

@@ -20,6 +20,12 @@ export class RoutesController {
     return this.routesService.create(createRouteDto);
   }
 
+  @Post(`:id/process-route`)
+  processRoute(
+    @Param('id') id: string,
+    @Body() payload: { lat: number; lng: number },
+  ) {}
+
   @Get()
   findAll() {
     return this.routesService.findAll();
@@ -32,7 +38,7 @@ export class RoutesController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateRouteDto: UpdateRouteDto) {
-    return this.routesService.update(+id, updateRouteDto);
+    return this.routesService.update(id, updateRouteDto);
   }
 
   @Delete(':id')
