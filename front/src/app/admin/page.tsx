@@ -6,6 +6,7 @@ import { socket } from "../../utils/socket-io";
 
 export function AdminPage() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  // @ts-expect-error - mapContainerRef is not null
   const map = useMap(mapContainerRef);
 
   useEffect(() => {
@@ -13,9 +14,7 @@ export function AdminPage() {
       return;
     }
 
-    if (socket.disconnected) {
-      socket.connect();
-    }
+    socket.connect();
 
     socket.on(
       `server:new-points:list`,
@@ -23,7 +22,7 @@ export function AdminPage() {
         console.log(data);
         if (!map.hasRoute(data.route_id)) {
           const response = await fetch(
-            `http://localhost:3001/api/routes/${data.route_id}`
+            `${process.env.NEXT_PUBLIC_NEXT_API_URL}/routes/${data.route_id}`
           );
           const route = await response.json();
           map.addRouteWithIcons({
@@ -42,9 +41,9 @@ export function AdminPage() {
         map.moveCar(data.route_id, { lat: data.lat, lng: data.lng });
       }
     );
-    // return () => {
-    //   socket.disconnect();
-    // };
+    return () => {
+      socket.disconnect();
+    };
   }, [map]);
 
   return <div className="flex-1 w-screen h-screen" ref={mapContainerRef} />;
