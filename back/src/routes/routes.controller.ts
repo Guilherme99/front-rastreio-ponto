@@ -10,10 +10,14 @@ import {
 import { RoutesService } from './routes.service';
 import { CreateRouteDto } from './dto/create-route.dto';
 import { UpdateRouteDto } from './dto/update-route.dto';
+import { RoutesDriverService } from './routes-driver/routes-driver.service';
 
 @Controller('routes')
 export class RoutesController {
-  constructor(private readonly routesService: RoutesService) {}
+  constructor(
+    private readonly routesService: RoutesService,
+    private routesDriverService: RoutesDriverService,
+  ) {}
 
   @Post()
   create(@Body() createRouteDto: CreateRouteDto) {
@@ -21,10 +25,16 @@ export class RoutesController {
   }
 
   @Post(`:id/process-route`)
-  processRoute(
+  async processRoute(
     @Param('id') id: string,
     @Body() payload: { lat: number; lng: number },
-  ) {}
+  ) {
+    await this.routesDriverService.processRoute({
+      route_id: id,
+      lat: payload.lat,
+      lng: payload.lng,
+    });
+  }
 
   @Get()
   findAll() {

@@ -6,9 +6,10 @@ import { RoutesDriverService } from './routes-driver/routes-driver.service';
 import { RoutesDriverGateway } from './routes-driver/routes-driver.gateway';
 import { KafkaModule } from 'src/kafka/kafka.module';
 import { RoutesConsumer } from './routes.consumer';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [MapsModule, KafkaModule],
+  imports: [MapsModule, KafkaModule, HttpModule],
   controllers: [RoutesController, RoutesConsumer],
   providers: [RoutesService, RoutesDriverService, RoutesDriverGateway],
 })
